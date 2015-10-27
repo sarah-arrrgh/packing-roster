@@ -1,26 +1,35 @@
 <html>
+
 <head>
   <title>Co-op Packing Roster</title>
   <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
   <h1>Co-op Packing Roster</h1>
-  <div id="newEventDiv"></div>
-    <h2>Create new event</h2>
+
+  <div id="displayEventsDiv">
+    <h2>Upcoming Events</h2>
+  </div>
+
+  <div id="newEventDiv">
+    <h2>Create New Event</h2>
     <form id="newEventForm">
-      <input type="text" id="titleInput" placeholder="Event title" /><p />
-      <input type="date" id="dateInput" placeholder="Date" /><p />
-      <input type="time" id="timeInput" placeholder="Time" /><p />
-      <input type="number" id="numberInput" placeholder="Number of people" /><p />
-      <textarea form="newEventForm" id="descriptionInput" placeholder="Description/Comments"></textarea><p />
+      <input type="text" id="titleInput" placeholder="Event title" />
+      <input type="date" id="dateInput" placeholder="Date" />
+      <input type="time" id="timeInput" placeholder="Time" />
+      <input type="number" id="numberInput" placeholder="Number of people" />
+      <textarea form="newEventForm" id="descriptionInput" placeholder="Description/Comments"></textarea>
       <input type="submit" id="submitInput" />
     </form>
   </div>
-  <script>
+
+
+<script>
     //contributor end pushes info to database
-    var myDataRef = new Firebase("https://packing-roster.firebaseio.com/");
+    var myDataRef = new Firebase("https://packing-roster.firebaseio.com/events");
     $("#newEventForm").submit(function (e) {
       var title = $("#titleInput").val();
       var date = $("#dateInput").val();
@@ -34,19 +43,31 @@
       $("#numberInput").val("");
       $("#descriptionInput").val("");
     });
+
+    //this listens for new children, and updates display
+    myDataRef.on("child_added", function(snapshot) {
+      var event = snapshot.val();
+      displayEvent(event.title, event.date, event.time, event.numberOfPeople, event.description);
+      console.log(event)
+    });
+    function displayEvent(title, date, time, number, description) {
+      $('#displayEventsDiv').append("<h3>" + title + "</h3>")
+      $('#displayEventsDiv').append("<p><b>Date:</b> " + date + "</p>")
+      $('#displayEventsDiv').append("<p><b>Time:</b> " + time + "</p>")
+      $('#displayEventsDiv').append("<p><b>Number of people needed:</b> " + number + "</p>")
+      $('#displayEventsDiv').append("<p><b>Description:</b> " + description + "</p>")
+      $('#displayEventsDiv').append("<p><b>Who's coming?</b></p>")
+
+      //for each member in database (how to add members?) populate drop down list with unused names for this event
+      $('#displayEventsDiv').append("<select class='memberList'>")
+      
+      $('#displayEventsDiv').append("<option></option>")
+
+      $('#displayEventsDiv').append("<button class='joinUs' id='" + date.replace(/[^A-Z0-9]+/ig, "") + title.replace(/[^A-Z0-9]+/ig, "") + "'>Join Us</button></p>")
+      $('#displayEventsDiv').append('<hr width="40%" align="left">')
+      $("#displayEventsDiv")[0].scrollTop = $("#displayEventsDiv")[0].scrollHeight;
+    };
   </script>
 
-
-<script>
-//this listens for new children, and updates display
-myDataRef.on("child_added", function(snapshot) {
-  var message = snapshot.val();
-  displayChatMessage(message.name, message.text);
-});
-function displayChatMessage(name, text) {
-  $("<div/>").text(text).prepend($("<em/>").text(name+": ")).appendTo($("#messagesDiv"));
-  $("#messagesDiv")[0].scrollTop = $("#messagesDiv")[0].scrollHeight;
-};
-</script>
 </body>
 </html>

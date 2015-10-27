@@ -1,0 +1,40 @@
+body {
+  margin: 3%;
+  font-family: sans-serif;
+}
+
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 22px;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+p {
+  font-size: 12px;
+}
+
+input, textarea {
+  display: block;
+  margin-bottom: 20px;
+}
+
+em {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+#newEventDiv {
+  width: 40%;
+  float: left;
+}
+
+#displayEventsDiv {
+  width: 60%;
+  float: left;
+}
