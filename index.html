@@ -20,7 +20,7 @@
       <input type="text" id="titleInput" placeholder="Event title" />
       <input type="date" id="dateInput" placeholder="Date" />
       <input type="time" id="timeInput" placeholder="Time" />
-      <input type="number" id="numberInput" placeholder="Number of people" />
+      <input type="number" id="numberInput" placeholder="# of people needed" />
       <textarea form="newEventForm" id="descriptionInput" placeholder="Description/Comments"></textarea>
       <input type="submit" id="submitInput" />
     </form>
@@ -65,7 +65,7 @@
       $('#displayEventsDiv').append("<p><b>Time:</b> " + time + "</p>")
       $('#displayEventsDiv').append("<p><b>Number of people needed:</b> " + number + "</p>")
       $('#displayEventsDiv').append("<p><b>Description:</b> " + description + "</p>")
-      $('#displayEventsDiv').append("<p><b>Who's coming?</b></p>")
+      $('#displayEventsDiv').append("<div id='whosComingDiv'><p><b>Who's coming?</b></p></div>")
       $('#displayEventsDiv').append("<form id='" + eventID + "Form'></form>")
 
       //for each member in database (how to add members?) populate drop down list with unused names for this event
@@ -82,11 +82,24 @@
 
     function addPackerEventListener(eventID, firebaseKey){
       $("#" + eventID + "Form").submit(function (e) {
-        console.log(firebaseKey)
-        var eventRef = new Firebase("https://packing-roster.firebaseio.com/events/" + firebaseKey + "/pplComing");
+        console.log("Firebase key: " + firebaseKey)
+        var pplComingRef = new Firebase("https://packing-roster.firebaseio.com/events/" + firebaseKey + "/pplComing");
         e.preventDefault()
         var packer = $("#" + eventID + "Form option:selected").text()
-        eventRef.push(packer)
+        pplComingRef.push(packer)
+        console.log("Packer: " + packer)
+        $('#whosComingDiv').append("<li>" + packer + "</li>")
+
+
+        console.log("#ppl coming: " + pplComingRef)
+
+        pplComingRef.on("value", function(snapshot){
+          var packers = snapshot.val()
+          console.log("number: " + Object.keys(packers).length)
+          for (var i in packers){
+            console.log(packers[i])
+          }
+        })
 
       })
     }
