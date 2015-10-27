@@ -27,17 +27,16 @@
   </div>
 
 
-<script>
+  <script>
     //pushes info to database from form values
-    var myDataRef = new Firebase("https://packing-roster.firebaseio.com/events");
-    var membersDataRef = new Firebase("https://packing-roster.firebaseio.com/members");
+    var createEventRef = new Firebase("https://packing-roster.firebaseio.com/events");
     $("#newEventForm").submit(function (e) {
       var title = $("#titleInput").val()
       var date = $("#dateInput").val()
       var time = $("#timeInput").val()
       var number = $("#numberInput").val()
       var description = $("#descriptionInput").val()
-      myDataRef.push({title: title, date: date, time: time, number: number, description: description})
+      createEventRef.push({title: title, date: date, time: time, number: number, description: description})
       $("#titleInput").val("")
       $("#dateInput").val("")
       $("#timeInput").val("")
@@ -46,9 +45,10 @@
     })
 
     //this listens for new children, and updates display
-    myDataRef.on("child_added", function(snapshot) {
+    createEventRef.on("child_added", function(snapshot) {
       var event = snapshot.val()
-      displayEvent(event.title, event.date, event.time, event.number, event.description)
+      console.log(snapshot.key())
+      displayEvent(event.title, event.date, event.time, event.number, event.description, snapshot.key())
       console.log(event)
     })
 
@@ -57,26 +57,39 @@
     //when pplAssigned.length = numberOfPeople then that event is full
     //
     //listens for
-    membersDataRef.on
 
-    function displayEvent(title, date, time, number, description) {
+    function displayEvent(title, date, time, number, description, firebaseKey) {
+      var eventID = date.replace(/[^A-Z0-9]+/ig, "") + title.replace(/[^A-Z0-9]+/ig, "")
       $('#displayEventsDiv').append("<h3>" + title + "</h3>")
       $('#displayEventsDiv').append("<p><b>Date:</b> " + date + "</p>")
       $('#displayEventsDiv').append("<p><b>Time:</b> " + time + "</p>")
       $('#displayEventsDiv').append("<p><b>Number of people needed:</b> " + number + "</p>")
       $('#displayEventsDiv').append("<p><b>Description:</b> " + description + "</p>")
       $('#displayEventsDiv').append("<p><b>Who's coming?</b></p>")
+      $('#displayEventsDiv').append("<form id='" + eventID + "Form'></form>")
 
       //for each member in database (how to add members?) populate drop down list with unused names for this event
-      $('#displayEventsDiv').append("<select id='memberList'><option value='ange'>Ange</option><option value='sarah'>Sarah</option><option value='leila'>Leila</option><option value='frank'>Frank</option>")
+      $('#displayEventsDiv #' + eventID + 'Form').append("<select id='memberList'><option value='ange'>Ange</option><option value='sarah'>Sarah</option><option value='leila'>Leila</option><option value='frank'>Frank</option>")
       // for(var i = 0; i < memberList.size; i++) {
       //   $("#memberList").append(memberList.name[i])
       // }
 
-      $('#displayEventsDiv').append("<button class='joinUs' id='" + date.replace(/[^A-Z0-9]+/ig, "") + title.replace(/[^A-Z0-9]+/ig, "") + "button'>Join Us</button></p>")
+      $('#displayEventsDiv #' + eventID + 'Form').append("<button class='joinUs' id='" + eventID + "Button'>Join Us</button></p>")
       $('#displayEventsDiv').append('<hr width="40%" align="left">')
       $("#displayEventsDiv")[0].scrollTop = $("#displayEventsDiv")[0].scrollHeight;
+      addPackerEventListener(eventID, firebaseKey)
     };
+
+    function addPackerEventListener(eventID, firebaseKey){
+      $("#" + eventID + "Form").submit(function (e) {
+        console.log(firebaseKey)
+        var eventRef = new Firebase("https://packing-roster.firebaseio.com/events/" + firebaseKey + "/pplComing");
+        e.preventDefault()
+        var packer = $("#" + eventID + "Form option:selected").text()
+        eventRef.push(packer)
+
+      })
+    }
   </script>
 
 </body>
