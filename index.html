@@ -1,0 +1,52 @@
+<html>
+<head>
+  <title>Co-op Packing Roster</title>
+  <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <h1>Co-op Packing Roster</h1>
+  <div id="newEventDiv"></div>
+    <h2>Create new event</h2>
+    <form id="newEventForm">
+      <input type="text" id="titleInput" placeholder="Event title" /><p />
+      <input type="date" id="dateInput" placeholder="Date" /><p />
+      <input type="time" id="timeInput" placeholder="Time" /><p />
+      <input type="number" id="numberInput" placeholder="Number of people" /><p />
+      <textarea form="newEventForm" id="descriptionInput" placeholder="Description/Comments"></textarea><p />
+      <input type="submit" id="submitInput" />
+    </form>
+  </div>
+  <script>
+    //contributor end pushes info to database
+    var myDataRef = new Firebase("https://packing-roster.firebaseio.com/");
+    $("#newEventForm").submit(function (e) {
+      var title = $("#titleInput").val();
+      var date = $("#dateInput").val();
+      var time = $("#timeInput").val();
+      var number = $("#numberInput").val();
+      var description = $("#descriptionInput").val();
+      myDataRef.push({title: title, date: date, time: time, numberOfPeople: number, description: description})
+      $("#titleInput").val("");
+      $("#dateInput").val("");
+      $("#timeInput").val("");
+      $("#numberInput").val("");
+      $("#descriptionInput").val("");
+    });
+  </script>
+
+
+<script>
+//this listens for new children, and updates display
+myDataRef.on("child_added", function(snapshot) {
+  var message = snapshot.val();
+  displayChatMessage(message.name, message.text);
+});
+function displayChatMessage(name, text) {
+  $("<div/>").text(text).prepend($("<em/>").text(name+": ")).appendTo($("#messagesDiv"));
+  $("#messagesDiv")[0].scrollTop = $("#messagesDiv")[0].scrollHeight;
+};
+</script>
+</body>
+</html>
