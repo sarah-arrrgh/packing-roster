@@ -38,3 +38,7 @@ em {
   width: 60%;
   float: left;
 }
+
+select {
+  margin-right: 5px;
+}
