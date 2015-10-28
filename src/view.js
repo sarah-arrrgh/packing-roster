@@ -1,26 +1,54 @@
 //displays a new event using info passed into function. called in index.js
 
+//TODO turn this into a View object IIFE - only expose the displayEvent method publically
+//
+//var View = (function() {
+//  function View() {
+//  }
+//
+//  public method
+//  View.prototype.displayEvent = function(...) {
+//   var eventID = generateEventID(date, title)
+//  }
+//
+//  private method
+//  function generateEventID(date, title) {} etc.
+//
+//  return View
+//})()
+
 function displayEvent(title, date, time, number, description, firebaseKey) {
-  var eventID = date.replace(/[^A-Z0-9]+/ig, "") + title.replace(/[^A-Z0-9]+/ig, "")
-  var packersRef = new Firebase("https://packing-roster.firebaseio.com/events/" + firebaseKey + "/packers");
+  var eventID = generateEventID(date, title)
 
-  $('#displayEventsDiv').append("<h3>" + title + "</h3>")
-  $('#displayEventsDiv').append("<p><b>Date:</b> " + date + "</p>")
-  $('#displayEventsDiv').append("<p><b>Time:</b> " + time + "</p>")
-  $('#displayEventsDiv').append("<p><b>Number of people needed:</b> " + number + "</p>")
-  $('#displayEventsDiv').append("<p><b>Description:</b> " + description + "</p>")
-  $('#displayEventsDiv').append("<div id='" + eventID + "PackersDiv'><p><b>Packers:</b></p></div>")
-  $('#displayEventsDiv').append("<form id='" + eventID + "PackersForm'></form>")
-
-  //for each member in database (how to add members?) populate drop down list with unused names for this event
-  $('#displayEventsDiv #' + eventID + 'PackersForm').append("<select id='memberList'><option value='ange'>Ange</option><option value='sarah'>Sarah</option><option value='leila'>Leila</option><option value='frank'>Frank</option>")
-  // for(var i = 0; i < memberList.size; i++) {
-  //   $("#memberList").append(memberList.name[i])
-  // }
-
-  $('#displayEventsDiv #' + eventID + 'PackersForm').append("<button class='joinUs' id='" + eventID + "PackersButton'>Sign me up!</button></p>")
-  $('#displayEventsDiv').append('<hr width="40%" align="left">')
-  $("#displayEventsDiv")[0].scrollTop = $("#displayEventsDiv")[0].scrollHeight;
+  displayEventDetails(title, date, time, number, description, eventID)
+  displayPackersForm(eventID)
+  scrollToTop()
   addPackerEventListener(eventID, firebaseKey)
-  updateFromFirebase(eventID, packersRef)
+  updateFromFirebase(eventID, firebaseKey)
 };
+
+function generateEventID(date, title) {
+  return(date.replace(/[^A-Z0-9]+/ig, "") + title.replace(/[^A-Z0-9]+/ig, ""))
+}
+
+function displayEventDetails(title, date, time, number, description, eventID) {
+  $('#displayEventsDiv')
+    .append("<h3>" + title + "</h3>")
+    .append("<p><b>Date:</b> " + date + "</p>")
+    .append("<p><b>Time:</b> " + time + "</p>")
+    .append("<p><b>Number of people needed:</b> " + number + "</p>")
+    .append("<p><b>Description:</b> " + description + "</p>")
+    .append("<div id='" + eventID + "PackersDiv'><p><b>Packers:</b></p></div>")
+    .append("<form id='" + eventID + "PackersForm'></form>")
+    .append('<hr width="40%" align="left">')
+}
+
+function displayPackersForm(eventID) {
+  $('#displayEventsDiv #' + eventID + 'PackersForm')
+    .append("<select id='memberList'><option value='ange'>Ange</option><option value='sarah'>Sarah</option><option value='leila'>Leila</option><option value='frank'>Frank</option>")
+    .append("<button class='joinUs' id='" + eventID + "PackersButton'>Sign me up!</button></p>")
+}
+
+function scrollToTop() {
+  $("#displayEventsDiv")[0].scrollTop = $("#displayEventsDiv")[0].scrollHeight;
+}
