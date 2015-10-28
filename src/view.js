@@ -6,9 +6,12 @@
 //  function View() {
 //  }
 //
+//  public method
 //  View.prototype.displayEvent = function(...) {
+//   var eventID = generateEventID(date, title)
 //  }
 //
+//  private method
 //  function generateEventID(date, title) {} etc.
 //
 //  return View
