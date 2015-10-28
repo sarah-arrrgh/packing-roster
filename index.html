@@ -1,0 +1,33 @@
+<html>
+
+<head>
+  <title>Co-op Packing Roster</title>
+  <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src='src/view.js'></script>
+  <script src='src/controller.js'></script>
+  <script src='src/index.js'></script>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <h1>Co-op Packing Roster</h1>
+
+  <div id="displayEventsDiv">
+    <h2>Upcoming Events</h2>
+  </div>
+
+  <div id="newEventDiv">
+    <h2>Create New Event</h2>
+    <form id="newEventForm">
+      <input type="text" id="titleInput" placeholder="Event title" />
+      <input type="date" id="dateInput" placeholder="Date" />
+      <input type="time" id="timeInput" placeholder="Time" />
+      <input type="number" id="numberInput" placeholder="# of people needed" />
+      <textarea form="newEventForm" id="descriptionInput" placeholder="Description/Comments"></textarea>
+      <input type="submit" id="submitInput" />
+    </form>
+  </div>
+
+</body>
+</html>
