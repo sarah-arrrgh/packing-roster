@@ -1,5 +1,19 @@
 //displays a new event using info passed into function. called in index.js
 
+//TODO turn this into a View object IIFE - only expose the displayEvent method publically
+//
+//var View = (function() {
+//  function View() {
+//  }
+//
+//  View.prototype.displayEvent = function(...) {
+//  }
+//
+//  function generateEventID(date, title) {} etc.
+//
+//  return View
+//})()
+
 function displayEvent(title, date, time, number, description, firebaseKey) {
   var eventID = generateEventID(date, title)
 
