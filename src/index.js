@@ -1,16 +1,17 @@
 //creates a new event - pushes form values to firebase
-var eventRef = new Firebase("https://packing-roster.firebaseio.com/events");
 
 $(function() {
+  var firebaseWrapper = new FirebaseWrapper()
+
   $("#newEventForm").submit(function (e) {
-    createEvent()
+    createEvent(firebaseWrapper)
   })
 
-  firebaseEventListener()
+  onEventAdded(firebaseWrapper)
 })
 
-function createEvent() {
-  eventRef.push({
+function createEvent(firebaseWrapper) {
+  firebaseWrapper.createEvent({
     title: $("#titleInput").val(),
     date: $("#dateInput").val(),
     time: $("#timeInput").val(),
@@ -28,9 +29,8 @@ function clearNewEventForm() {
   $("#descriptionInput").val("")
 }
 
-function firebaseEventListener() {
-  //listens on firebase for new events, and updates display
-  eventRef.on("child_added", function(snapshot) {
+function onEventAdded(firebaseWrapper) {
+  firebaseWrapper.onEventAdded(function(snapshot) {
     var event = snapshot.val()
     displayEvent(event.title, event.date, event.time, event.number, event.description, snapshot.key())
   })
