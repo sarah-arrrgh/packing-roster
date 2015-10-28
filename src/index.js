@@ -1,4 +1,4 @@
-//pushes info to database from form values
+//creates a new event - pushes form values to firebase
 var createEventRef = new Firebase("https://packing-roster.firebaseio.com/events");
 $(function() {
   $("#newEventForm").submit(function (e) {
@@ -15,11 +15,11 @@ $(function() {
     $("#descriptionInput").val("")
   })
 
-  //this listens for new children, and updates display
+  //listens on firebase for new events, and updates display
   createEventRef.on("child_added", function(snapshot) {
     var event = snapshot.val()
-    console.log(snapshot.key())
+    console.log("Firebase key: " + snapshot.key())
     displayEvent(event.title, event.date, event.time, event.number, event.description, snapshot.key())
-    console.log(event)
+    console.log("New event details: " + event)
   })
 })

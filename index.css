@@ -1,7 +1,11 @@
+* {
+  color: #1A4258;
+}
+
 body {
   margin: 3%;
   font-family: sans-serif;
-  background-color: #fdfaf2;
+  background-color: #ACC0CA;
 }
 
 h1 {
