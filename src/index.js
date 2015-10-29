@@ -32,6 +32,6 @@ function onEventAdded(firebaseWrapper) {
   firebaseWrapper.onEventAdded(function(snapshot) {
     var event = snapshot.val()
     var view = new View()
-  view.displayEvent(event.title, event.date, event.time, event.number, event.description, snapshot.key())
+  view.displayEvent(snapshot)
   })
 }
