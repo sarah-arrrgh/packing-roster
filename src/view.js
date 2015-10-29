@@ -6,13 +6,12 @@ var View = (function() {
   View.prototype.displayEvent = function(snapshot) {
 
     var event = new Event(snapshot.val())
-    event.numberOfPackers()
 
     displayEventDetails(event)
-    displayPackersForm(event.eventID)
+    displayPackersForm(event.eventID,event)
     scrollToTop()
     addPackerEventListener(event.eventID, snapshot.key())
-    updateFromFirebase(event.eventID, snapshot.key())
+    updateFromFirebase(event.eventID, snapshot.key(),event)
   }
 
   function displayEventDetails(event) {
@@ -28,10 +27,13 @@ var View = (function() {
     .append('<hr width="40%" align="left">')
   }
 
-  function displayPackersForm(eventID) {
-    $('#displayEventsDiv #' + eventID + 'PackersForm')
+  function displayPackersForm(eventID, event) {
+    console.log(event)
+    if (event.numberOfPackers() < event.number) {
+     $('#displayEventsDiv #' + eventID + 'PackersForm')
     .append("<select id='memberList'><option value='ange'>Ange</option><option value='sarah'>Sarah</option><option value='leila'>Leila</option><option value='frank'>Frank</option>")
     .append("<button class='joinUs' id='" + eventID + "PackersButton'>Sign me up!</button></p>")
+  }
   }
 
   function addPackerEventListener(eventID, firebaseKey){
@@ -50,11 +52,15 @@ var View = (function() {
 
   //retrieves info from firebase about packers
   // similar to onEventAdded in index
-  function updateFromFirebase(eventID, firebaseKey){
+  function updateFromFirebase(eventID, firebaseKey, event){
     //TODO move to firebasewrapper
-    var packersRef = new Firebase("https://packing-roster.firebaseio.com/events/" + firebaseKey + "/packers");
+    var packersRef = new Firebase("https://packing-roster.firebaseio.com/events/" + firebaseKey + "/packers")
     packersRef.on("value", function(snapshot){
       var packers = snapshot.val()
+      event.packers = packers
+      if (event.numberOfPackers() == event.number){
+        $("#" + eventID + "PackersForm").hide()
+      }
       $('#' + eventID + 'PackersDiv').empty()
       for (var i in packers){
         $('#' + eventID + 'PackersDiv').append("<li>" + packers[i] + "</li>")

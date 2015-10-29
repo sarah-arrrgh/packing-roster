@@ -17,13 +17,13 @@ var Event = (function(){
 
   Event.prototype.numberOfPackers =function() {
     if (this.packers != null) {
-      console.log(Object.keys(this.packers).length)
-
+      return(Object.keys(this.packers).length)
+     
     }
-
-
+    else {
+      return(0)
+    }
   }
-
 
 
   return Event
