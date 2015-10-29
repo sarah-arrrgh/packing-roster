@@ -25,8 +25,19 @@ var Event = (function(){
     }
   }
 
+  Event.prototype.packerNames =function() {
+    if (this.packers != null) {
+      var names = Object.keys(this.packers)
+      for (var i = 0; i < names.length; i++) {
+        var val = this.packers[names[i]]
+
+        console.log("val: " + val) 
+      }
+    }
+  }
+
 
   return Event
 })()
 
-// module.exports = Event
+ // module.exports = Event

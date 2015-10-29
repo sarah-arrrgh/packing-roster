@@ -7,6 +7,7 @@ var View = (function() {
 
     var event = new Event(snapshot.val())
 
+    event.packerNames()
     displayEventDetails(event)
     displayPackersForm(event.eventID,event)
     scrollToTop()
@@ -28,7 +29,6 @@ var View = (function() {
   }
 
   function displayPackersForm(eventID, event) {
-    console.log(event)
     if (event.numberOfPackers() < event.number) {
      $('#displayEventsDiv #' + eventID + 'PackersForm')
     .append("<select id='memberList'><option value='ange'>Ange</option><option value='sarah'>Sarah</option><option value='leila'>Leila</option><option value='frank'>Frank</option>")
