@@ -1,5 +1,4 @@
 //creates a new event - pushes form values to firebase
-
 $(function() {
   var firebaseWrapper = new FirebaseWrapper()
 
@@ -32,6 +31,7 @@ function clearNewEventForm() {
 function onEventAdded(firebaseWrapper) {
   firebaseWrapper.onEventAdded(function(snapshot) {
     var event = snapshot.val()
-    displayEvent(event.title, event.date, event.time, event.number, event.description, snapshot.key())
+    var view = new View()
+  view.displayEvent(event.title, event.date, event.time, event.number, event.description, snapshot.key())
   })
 }

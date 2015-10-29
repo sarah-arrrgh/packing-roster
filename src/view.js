@@ -2,22 +2,13 @@
 
 //TODO turn this into a View object IIFE - only expose the displayEvent method publically
 //
-//var View = (function() {
-//  function View() {
-//  }
-//
-//  public method
-//  View.prototype.displayEvent = function(...) {
-//   var eventID = generateEventID(date, title)
-//  }
-//
-//  private method
-//  function generateEventID(date, title) {} etc.
-//
-//  return View
-//})()
+var View = (function() {
+ function View() {
+ }
 
-function displayEvent(title, date, time, number, description, firebaseKey) {
+ // public method
+ View.prototype.displayEvent = function(title, date, time, number, description, firebaseKey) {
+
   var eventID = generateEventID(date, title)
 
   displayEventDetails(title, date, time, number, description, eventID)
@@ -25,8 +16,9 @@ function displayEvent(title, date, time, number, description, firebaseKey) {
   scrollToTop()
   addPackerEventListener(eventID, firebaseKey)
   updateFromFirebase(eventID, firebaseKey)
-};
+ }
 
+ 
 function generateEventID(date, title) {
   return(date.replace(/[^A-Z0-9]+/ig, "") + title.replace(/[^A-Z0-9]+/ig, ""))
 }
@@ -38,7 +30,8 @@ function displayEventDetails(title, date, time, number, description, eventID) {
     .append("<p><b>Time:</b> " + time + "</p>")
     .append("<p><b>Number of people needed:</b> " + number + "</p>")
     .append("<p><b>Description:</b> " + description + "</p>")
-    .append("<div id='" + eventID + "PackersDiv'><p><b>Packers:</b></p></div>")
+    .append("<p><b>Packers:</b></p>")
+    .append("<div id='" + eventID + "PackersDiv'></div>")
     .append("<form id='" + eventID + "PackersForm'></form>")
     .append('<hr width="40%" align="left">')
 }
@@ -49,6 +42,33 @@ function displayPackersForm(eventID) {
     .append("<button class='joinUs' id='" + eventID + "PackersButton'>Sign me up!</button></p>")
 }
 
+function addPackerEventListener(eventID, firebaseKey){
+  $("#" + eventID + "PackersForm").submit (function(e){
+    e.preventDefault()
+    var packer = $("#" + eventID + "PackersForm option:selected").text()
+    var firebaseWrapper = new FirebaseWrapper()
+
+    firebaseWrapper.addPacker(packer, firebaseKey)
+  })
+}
+
 function scrollToTop() {
   $("#displayEventsDiv")[0].scrollTop = $("#displayEventsDiv")[0].scrollHeight;
 }
+
+//retrieves info from firebase about packers
+// similar to onEventAdded in index
+
+function updateFromFirebase(eventID, firebaseKey){
+  //TODO move to firebasewrapper
+  var packersRef = new Firebase("https://packing-roster.firebaseio.com/events/" + firebaseKey + "/packers");
+  packersRef.on("value", function(snapshot){
+    var packers = snapshot.val()
+    $('#' + eventID + 'PackersDiv').empty()
+    for (var i in packers){
+      $('#' + eventID + 'PackersDiv').append("<li>" + packers[i] + "</li>")
+    }
+  })
+}
+ return View
+})()
