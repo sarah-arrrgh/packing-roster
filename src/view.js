@@ -6,6 +6,7 @@ var View = (function() {
   View.prototype.displayEvent = function(snapshot) {
 
     var event = new Event(snapshot.val())
+    event.numberOfPackers()
 
     displayEventDetails(event)
     displayPackersForm(event.eventID)
@@ -13,8 +14,6 @@ var View = (function() {
     addPackerEventListener(event.eventID, snapshot.key())
     updateFromFirebase(event.eventID, snapshot.key())
   }
-
-
 
   function displayEventDetails(event) {
     $('#displayEventsDiv')
