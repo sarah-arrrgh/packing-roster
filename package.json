@@ -1,0 +1,26 @@
+{
+  "name": "packing-roster",
+  "version": "1.0.0",
+  "description": "Packing roster for the Petone Co-op",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sarah-arrrgh/packing-roster.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sarah-arrrgh/packing-roster/issues"
+  },
+  "homepage": "https://github.com/sarah-arrrgh/packing-roster#readme",
+  "devDependencies": {
+    "chai": "^3.4.0",
+    "mocha": "^2.3.3"
+  }
+}
