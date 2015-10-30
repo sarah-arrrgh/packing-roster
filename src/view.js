@@ -7,6 +7,7 @@ var View = (function() {
 
     var event = new Event(snapshot.val())
 
+    event.packerNames()
     displayEventDetails(event)
     displayPackersForm(event.eventID,event)
     scrollToTop()
@@ -28,11 +29,18 @@ var View = (function() {
   }
 
   function displayPackersForm(eventID, event) {
-    console.log(event)
     if (event.numberOfPackers() < event.number) {
      $('#displayEventsDiv #' + eventID + 'PackersForm')
-    .append("<select id='memberList'><option value='ange'>Ange</option><option value='sarah'>Sarah</option><option value='leila'>Leila</option><option value='frank'>Frank</option>")
+    .append("<select id='memberList'><option>--Please Select--</option></select>")
     .append("<button class='joinUs' id='" + eventID + "PackersButton'>Sign me up!</button></p>")
+
+    var firebaseMemberWrapper = new FirebaseMemberWrapper()
+    firebaseMemberWrapper.onMemberAdded(function(snapshot){
+      if (event.packerNames().indexOf(snapshot.val().name) == -1){
+      $('#displayEventsDiv #' + eventID + 'PackersForm #memberList').append("<option>" + snapshot.val().name + "</option>")
+      }
+    })
+
   }
   }
 
@@ -61,10 +69,18 @@ var View = (function() {
       if (event.numberOfPackers() == event.number){
         $("#" + eventID + "PackersForm").hide()
       }
+      //hide option
+
       $('#' + eventID + 'PackersDiv').empty()
+      $('#displayEventsDiv #' + eventID + 'PackersForm #memberList option:first').attr('selected', 'selected')
+ 
       for (var i in packers){
-        $('#' + eventID + 'PackersDiv').append("<li>" + packers[i] + "</li>")
+        var name = packers[i]
+        $('#displayEventsDiv #' + eventID + 'PackersForm #memberList option:contains("'+name+'")').hide()
+
+        $('#' + eventID + 'PackersDiv').append("<li>" + name + "</li>")
       }
+   
     })
   }
 
