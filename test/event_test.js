@@ -18,6 +18,7 @@ describe('Event', function(){
   describe('create new event', function(){
     it('has an eventID', function(){
       var event = new Event(this.eventHash)
+
       expect(event.eventID).to.equal("20151031Meat")
     })
 
@@ -29,6 +30,8 @@ describe('Event', function(){
 
       expect(event.numberOfPackers()).to.equal(1)
     })
+
+    
   })
 
 })
